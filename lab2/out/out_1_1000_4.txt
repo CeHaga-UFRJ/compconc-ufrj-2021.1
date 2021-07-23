@@ -1,0 +1,4 @@
+Inicializacao levou 0.012182 ms
+Multiplicacao levou 2.879114 ms
+O resultado esta certo
+Finalizacao levou 0.002910 ms
