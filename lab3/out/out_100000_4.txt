@@ -1,0 +1,3 @@
+Média Sequencial: 0.000538
+Média Concorrente: 0.000595
+Aceleração: 0.903783
