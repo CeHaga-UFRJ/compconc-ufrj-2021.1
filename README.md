@@ -4,8 +4,8 @@ Repository for Concurrent Computing class at UFRJ during 2021.1
 ## Laboratório 3
 <table>
   <tr>
-    <th>Número de Threads</th>
     <th>Dimensão</th>
+    <th>Número de Threads</th>
     <th>Média Sequencial (s)</th>
     <th>Média Concorrente (s)</th>
     <th>Aceleração</th>
