@@ -86,12 +86,18 @@ Esse método foi escolhido, ao invés de usar exclusão mútua para acessar uma 
 %Questão 4
 \exercise*
 
-(a)
+(a) Quando a T0 chegar na linha 3, a primeira condição do while é o valor da variável $queroEntrar\_1$, que é definida como false. Dessa forma, o while já é cancelado e passa para a linha 4, que contém a sessão crítica.
 
-(b)
+(b) Acontecerá a mesma coisa que explicado anteriormente, mas com a variável $queroEntrar\_0$.
 
-(c)
+(c) Se ambas executarem a linha 1 antes de entrar no while, ambas variáveis se tornam $true$. A thread que rodar a linha 2 primeiro irá se travar no while, pois após ambas terminarem essa linha, o valor da variável $TURN$ será 0 ou 1. Se for 0, T0 poderá entrar na seção crítica enquanto T1 ficará travado até que T0 chegue na linha 5. Se for 1, acontece a mesma coisa com a outra thread, com T1 podendo executar e T0 esperando.
 
-(d)
+(d) Sim. Todos os casos possíveis já foram conferidos nos itens anteriores:
+\begin{itemize}
+    \item Se T0 chegar ao while antes de T1 rodar, os valores serão $queroEntrar\_0 = true$ \& $TURN = 1$. Se esperar para que T1 chegue a seção crítica ao mesmo tempo, na linha 2 sobreescreverá $TURN = 0$, com isso seu while se torna verdadeiro e ficará travada
+    \item Se T1 chegar ao while antes de T0 rodar, acontecerá o contrário do anterior, com T1 rodando a seção crítica e T0 travado
+    \item Se chegarem ao mesmo tempo no while, como $queroEntrar\_0$ \& $queroEntrar\_1$ com certeza são $true$, dependerá da segunda condição, do valor de $TURN$. No entanto, só há 2 valores possíveis para esssa variável, sendo 0 a T1 ficará travada e sendo 1 a T0 ficará travada, então não há como permitir que ambas threads passem do while
+\end{itemize}
+Como não há condições para que acessem a seção crítica ao mesmo tempo, foi garantida exclusão mútua
 
 \end{document}
