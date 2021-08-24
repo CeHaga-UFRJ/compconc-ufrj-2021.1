@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
-#include "timer.h"
+#include "../lib/timer.h"
 // Usando a formula A.B=C
 float *A;
 float *B;
