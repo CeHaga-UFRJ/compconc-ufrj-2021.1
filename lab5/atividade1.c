@@ -7,26 +7,25 @@
 #define MAX_RANDOM 9
 #define ll long long int
 
-int nthreads;
+int n;
 int *array;
 int blocked;
-int n_iter;
 
 pthread_mutex_t mutex;
 pthread_cond_t cond;
 
-void barrierEnd(int idB){
+void barrierEnd(){
   printf("============ FIM DA ITERAÇÃO ============\n");
 }
 
-void barrier(int nthreads, ll id, int idB){
+void barrier(int n, ll id, int idB){
   pthread_mutex_lock(&mutex);
 
   printf("! Thread %lld chegou na barreira %d\n",id, idB);
 
-  if(blocked == nthreads-1){
+  if(blocked == n-1){
     printf("> Thread %lld liberou a barreira %d\n",id, idB);
-    if(idB == 2) barrierEnd(idB);
+    if(idB == 2) barrierEnd();
     pthread_cond_broadcast(&cond);
     blocked = 0;
   }else{
@@ -55,13 +54,13 @@ void* task(void* arg){
   *sum = 0;
   ll id = (ll) arg; 
 
-  for(int i = 0; i < n_iter; i++){
+  for(int i = 0; i < n; i++){
     printf("@ Começou thread %lld na iteração %d\n", id, i+1);
-    *sum += sumArray(array, nthreads);
-    barrier(nthreads, id, 1);
+    *sum += sumArray(array, n);
+    barrier(n, id, 1);
 
     array[id] = randomInt(MIN_RANDOM, MAX_RANDOM);
-    barrier(nthreads, id, 2);
+    barrier(n, id, 2);
   }
 
   pthread_exit((void *)sum);
@@ -77,17 +76,16 @@ int *createArray(int n){
 
 int main(int argc, char *argv[]){
   // Inicializacao
-  if(argc < 3){
-    printf("Utilização do programa:\n%s <número de threads> <número de iterações>\n",argv[0]);
+  if(argc < 2){
+    printf("Utilização do programa:\n%s <número de threads>\n",argv[0]);
     exit(1);
   }
 
-  nthreads = atoi(argv[1]);
-  n_iter = atoi(argv[2]);
-  array = createArray(nthreads);
+  n = atoi(argv[1]);
+  array = createArray(n);
   blocked = 0;
-  pthread_t tid[nthreads];
-  int result[nthreads];
+  pthread_t tid[n];
+  int result[n];
 
   pthread_mutex_init(&mutex, NULL);
   pthread_cond_init(&cond, NULL);
@@ -95,12 +93,12 @@ int main(int argc, char *argv[]){
   srand(time(NULL));
 
   // Criacao das threads
-  for(ll i = 0; i < nthreads; i++){
+  for(ll i = 0; i < n; i++){
     pthread_create(tid+i, NULL, task, (void *)i);
   }
 
   // Retorno das threads 
-  for(int i = 0; i < nthreads; i++){
+  for(int i = 0; i < n; i++){
     void *sum;
     pthread_join(tid[i], &sum);
     result[i] = *(int *)sum;
@@ -109,7 +107,7 @@ int main(int argc, char *argv[]){
   // Verificacao do resultado
   printf("A thread 0 obteve resultado %d\n",result[0]);
 
-  for(int i = 1; i < nthreads; i++){
+  for(int i = 1; i < n; i++){
     printf("A thread %d obteve resultado %d\n",i,result[i]);
     if(result[i] != result[i-1]){
       printf("Erro no resultado!!!\nAs threads %d e %d obtiveram valores diferentes\n", i-1, i);
