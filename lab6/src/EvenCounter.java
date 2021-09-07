@@ -25,7 +25,7 @@ public class EvenCounter implements Runnable{
         }
     }
 
-    public static int seqTotal(int[] array){
+    public synchronized static int seqTotal(int[] array){
         int total = 0;
         for(int n : array){
             if(n % 2 == 0) total++;
